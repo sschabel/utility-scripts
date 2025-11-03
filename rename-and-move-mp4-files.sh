@@ -19,9 +19,10 @@ find "$rootFolderPath" -type f -iname "*.mp4" | while read -r selectedFilePath; 
     if [ -n "$mediaCreatedString" ]; then
         echo "${selectedFilePath} media created string is ${mediaCreatedString}"
 
-        removedSpacesDateString="${mediaCreatedString// /_}"
-
-        formattedDateString="${removedSpacesDateString//:/_}"
+        dateString=$(echo "$mediaCreatedString" | sed 's/:/-/') # replace 1st occurrence of colon with hyphen
+        dateString=$(echo "$dateString" | sed 's/:/-/') # replace 2nd occurrence of colon with hyphen
+        echo "Formatting ${dateString} into date..."
+        formattedDateString=$(date --date "$dateString" +"%Y-%m-%d_%I%M_%p") # create correctly formatted date
         
         directoryName=$(dirname "$selectedFilePath")
         newFileName="${formattedDateString}.MP4"
